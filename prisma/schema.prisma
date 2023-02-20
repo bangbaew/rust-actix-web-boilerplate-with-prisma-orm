@@ -1,0 +1,53 @@
+datasource db {
+    provider          = "postgresql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+generator db {
+    provider = "cargo prisma"
+    output   = "../src/app/db/prisma.rs"
+}
+
+model playlist {
+    id         String   @id @default(cuid())
+    created_at DateTime @default(now()) @db.Timestamptz(0)
+    updated_at DateTime @updatedAt @db.Timestamptz(0)
+    name       String
+}
+
+model chant {
+    id          String   @id @default(cuid())
+    created_at  DateTime @default(now()) @db.Timestamptz(0)
+    updated_at  DateTime @updatedAt @db.Timestamptz(0)
+    name        String
+    content     String
+    translation String?
+    media       String?
+
+    place    place  @relation(fields: [place_id], references: [id])
+    place_id String
+}
+
+model place {
+    id          String   @id @default(cuid())
+    created_at  DateTime @default(now()) @db.Timestamptz(0)
+    updated_at  DateTime @updatedAt @db.Timestamptz(0)
+    name        String
+    sub         String?
+    description String?
+    chant       chant[]
+
+    journey    journey @relation(fields: [journey_id], references: [id])
+    journey_id String
+}
+
+model journey {
+    id          String   @id @default(cuid())
+    created_at  DateTime @default(now()) @db.Timestamptz(0)
+    updated_at  DateTime @updatedAt @db.Timestamptz(0)
+    name        String
+    duration    String
+    description String?
+    place       place[]
+}
