@@ -12,7 +12,7 @@ services:
         tmpfs:
             - /app/target:exec # Compiles into RAM, delete this line if you want it to compile to your storage.
         tty: true
-        entrypoint: /bin/sh -c "cargo install cargo-watch && cargo watch -x 'run --bin main'"
+        entrypoint: /bin/sh -c "cargo install cargo-watch && cargo watch -x 'run --bin main' -w src"
         environment:
             - RUST_LOG=debug
             - LISTEN_PORT=8080
